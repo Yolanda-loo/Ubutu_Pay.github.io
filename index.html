@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UbuntuPay - Biometric Payment Platform</title>
+  
+  <!-- PWA Manifest & Theme Color -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#3B82F6">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style id="app-style">
+    :root { --primary: #3B82F6; --primary-dark: #2563EB; --secondary: #10B981; --dark: #1F2937; }
+    body { font-family: 'Inter', sans-serif; background-color: #f9fafb; color: var(--dark); }
+    .app-container { max-width: 1200px; margin: 0 auto; }
+    .card { background-color: white; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+    .btn-primary { background-color: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-weight: 500; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-primary:hover:not(:disabled) { background-color: var(--primary-dark); }
+    .btn-primary:disabled { background-color: #93c5fd; cursor: not-allowed; }
+    .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+    .form-input { display: block; width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; }
+    .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); }
+    .fade-in { animation: fadeIn 0.5s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .spinner-dark { border-color: rgba(0,0,0,0.1); border-top-color: var(--primary); animation: spin 1s linear infinite; border-radius: 50%; border-width: 3px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .success-checkmark { width: 80px; height: 80px; margin: 0 auto; }
+    .check-icon { width: 80px; height: 80px; position: relative; border-radius: 50%; box-sizing: content-box; border: 4px solid var(--secondary); animation: scale-in 0.5s; }
+    .check-icon .icon-line { height: 5px; background-color: var(--secondary); display: block; border-radius: 2px; position: absolute; }
+    .check-icon .icon-line.line-tip { top: 46px; left: 14px; width: 25px; transform: rotate(45deg); animation: icon-line-tip 0.75s; }
+    .check-icon .icon-line.line-long { top: 38px; right: 8px; width: 47px; transform: rotate(-45deg); animation: icon-line-long 0.75s; }
+    @keyframes scale-in { from { transform: scale(0); } to { transform: scale(1); } }
+    @keyframes icon-line-tip { 0%, 54% { width: 0; } 100% { width: 25px; } }
+    @keyframes icon-line-long { 0%, 65% { width: 0; } 100% { width: 47px; } }
+    .custom-file-upload { display: block; border: 2px dashed #d1d5db; border-radius: 0.5rem; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+    .custom-file-upload:hover { border-color: var(--primary); background-color: #f0f5ff; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s ease; backdrop-filter: blur(5px); }
+    .modal.active { opacity: 1; visibility: visible; }
+    .modal-content { background-color: white; border-radius: 0.5rem; padding: 1.5rem; width: 90%; max-width: 500px; transform: scale(0.9); transition: all 0.3s ease; }
+    .modal.active .modal-content { transform: scale(1); }
+    .fingerprint-icon-animated { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } }
+    .face-scan-line { position: absolute; left: 0; width: 100%; height: 3px; background-color: cyan; box-shadow: 0 0 10px cyan; animation: scan 2s linear infinite; }
+    @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+    .toggle-switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .toggle-slider { background-color: var(--primary); }
+    input:checked + .toggle-slider:before { transform: translateX(26px); }
+  </style>
+</head>
+<body class="bg-gray-50">
+  
+  <div id="auth-shell">
+    <div class="app-container px-4 py-8">
+      <section id="landing-view" class="fade-in"><div class="text-center max-w-2xl mx-auto mt-16"><i class="fas fa-shield-alt text-7xl text-blue-500 mb-6"></i><h1 class="text-5xl font-bold text-gray-800 mb-4">Secure, Seamless Payments</h1><p class="text-lg text-gray-600 mb-10">Welcome to UbuntuPay. Log in or create an account to experience the future of biometric payments.</p><div class="flex justify-center gap-4"><button id="show-login-btn" class="btn-primary px-8 py-3 text-lg">Login</button><button id="show-register-btn" class="btn-primary bg-green-500 hover:bg-green-600 px-8 py-3 text-lg">Register</button></div></div></section>
+      <section id="login-view" class="fade-in hidden"><div class="max-w-md mx-auto card p-8"><h2 class="text-2xl font-bold text-center mb-6">Welcome Back!</h2><div class="text-center mb-6"><button id="biometric-login-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-4 px-6 rounded-lg w-full flex items-center justify-center text-lg"><i class="fas fa-fingerprint mr-3"></i> Login with Biometrics</button></div><div class="flex items-center my-4"><hr class="w-full"><span class="px-2 text-gray-500">OR</span><hr class="w-full"></div><form id="login-form"><div class="mb-4"><label for="login-email" class="form-label">Email</label><input type="email" id="login-email" class="form-input" value="john.doe@example.com" required></div><div class="mb-6"><label for="login-password" class="form-label">Password</label><input type="password" id="login-password" class="form-input" value="password" required></div><button type="submit" class="btn-primary w-full py-3">Login with Password</button></form></div></section>
+      <section id="register-view" class="fade-in hidden"><div class="max-w-md mx-auto card p-8"><h2 class="text-2xl font-bold text-center mb-6">Create Your Account</h2><form id="register-form"><div class="grid grid-cols-2 gap-4 mb-4"><div><label for="reg-firstname" class="form-label">First Name</label><input type="text" id="reg-firstname" class="form-input" required></div><div><label for="reg-lastname" class="form-label">Last Name</label><input type="text" id="reg-lastname" class="form-input" required></div></div><div class="mb-4"><label for="reg-email" class="form-label">Email</label><input type="email" id="reg-email" class="form-input" required></div><div class="mb-6"><label for="reg-password" class="form-label">Password</label><input type="password" id="reg-password" class="form-input" required></div><button type="submit" class="btn-primary w-full py-3">Create Account</button></form></div></section>
+      <section id="onboarding-start-view" class="fade-in hidden"><div class="text-center max-w-2xl mx-auto card p-10"><h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome, <span id="onboarding-welcome-name"></span>!</h1><p class="text-gray-600 mb-8">To secure your account, we need to verify your identity. This is a one-time process.</p><button id="begin-verification-btn" class="btn-primary px-8 py-3 text-lg">Begin Verification</button></div></section>
+      <section id="id-verification-view" class="fade-in hidden"><div class="max-w-2xl mx-auto card p-8"><div id="id-upload-step"><h2 class="text-2xl font-bold text-center mb-2">Step 1: Verify Your Identity</h2><p class="text-gray-600 text-center mb-8">Please upload clear images of your government-issued ID.</p><div class="grid md:grid-cols-2 gap-6 mb-8"><label class="custom-file-upload"><input type="file" id="id-front-upload" accept="image/*"><div id="id-front-feedback"><i class="fas fa-upload text-3xl text-gray-400 mb-3"></i><p class="font-semibold">Front of ID</p><p class="text-sm text-gray-500">Click to upload</p></div></label><label class="custom-file-upload"><input type="file" id="id-back-upload" accept="image/*"><div id="id-back-feedback"><i class="fas fa-upload text-3xl text-gray-400 mb-3"></i><p class="font-semibold">Back of ID</p><p class="text-sm text-gray-500">Click to upload</p></div></label></div><button id="submit-id-btn" class="btn-primary w-full py-3">Submit for Verification</button></div><div id="id-processing-step" class="hidden text-center py-8"><div class="spinner-dark w-12 h-12 mx-auto mb-6"></div><h2 class="text-xl font-bold">Processing Verification...</h2></div><div id="id-success-step" class="hidden text-center py-8"><div class="success-checkmark mx-auto mb-4"><div class="check-icon"><span class="icon-line line-tip"></span><span class="icon-line line-long"></span></div></div><h2 class="text-2xl font-bold text-green-600">ID Verified!</h2><button id="id-success-continue-btn" class="btn-primary mt-6">Continue to Face Setup</button></div></div></section>
+      <section id="face-registration-view" class="fade-in hidden"><div class="max-w-2xl mx-auto card p-8"><div id="face-setup-step"><h2 class="text-2xl font-bold text-center mb-2">Step 2: Register Your Face</h2><p class="text-gray-600 text-center mb-8">This allows you to authenticate payments securely with a glance.</p><div class="text-center"><button id="start-face-scan-btn" class="btn-primary py-3 px-6">Start Face Scan</button></div></div><div id="face-scanning-step" class="hidden text-center"><div class="w-48 h-48 mx-auto rounded-full bg-gray-200 flex items-center justify-center mb-4"><i class="fas fa-camera text-6xl text-gray-400"></i></div><p class="text-gray-600">Simulating face scan...</p><div class="spinner-dark w-8 h-8 mx-auto mt-4"></div></div><div id="face-success-step" class="hidden text-center py-8"><div class="success-checkmark mx-auto mb-4"><div class="check-icon"><span class="icon-line line-tip"></span><span class="icon-line line-long"></span></div></div><h2 class="text-2xl font-bold text-green-600">Face Registered!</h2><button id="face-success-continue-btn" class="btn-primary mt-6">Finish Setup</button></div></div></section>
+      <section id="onboarding-complete-view" class="fade-in hidden"><div class="text-center max-w-2xl mx-auto card p-10"><div class="success-checkmark mx-auto mb-4"><div class="check-icon"><span class="icon-line line-tip"></span><span class="icon-line line-long"></span></div></div><h1 class="text-3xl font-bold text-green-600 mb-2">Setup Complete!</h1><p class="text-gray-600 mb-8">Your UbuntuPay account is fully verified and ready to use.</p><button id="go-to-dashboard-btn" class="btn-primary px-8 py-3 text-lg">Go to Dashboard</button></div></section>
+    </div>
+  </div>
+
+  <div id="main-app-shell" class="hidden">
+    <header class="bg-white shadow-sm sticky top-0 z-50"><div class="app-container px-4 py-4 flex items-center justify-between"><a href="#" class="text-2xl font-bold text-blue-600 flex items-center" id="logo-link"><i class="fas fa-shield-alt mr-2"></i><span>UbuntuPay</span></a><div id="user-header-info" class="flex items-center ml-6"><span class="font-medium mr-3" id="header-user-name"></span><div class="h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center mr-4"><i class="fas fa-user"></i></div><button id="logout-btn" class="text-sm text-gray-500 hover:text-red-500 transition">Logout</button></div></div></header>
+    <main class="app-container px-4 py-8">
+      <section id="dashboard-view" class="fade-in"><div class="mb-8"><h1 class="text-3xl font-bold text-gray-800" id="dashboard-welcome-message"></h1><p class="text-gray-500">Manage your finances with the security of biometrics.</p></div><div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><div class="lg:col-span-2"><div class="card p-6"><h2 class="text-xl font-bold mb-4">Quick Actions</h2><div class="grid grid-cols-2 md:grid-cols-3 gap-4"><button id="action-send-money" class="bg-gray-50 p-4 rounded-lg text-center cursor-pointer hover:bg-gray-100 transition"><div class="h-12 w-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-3"><i class="fas fa-paper-plane"></i></div><div class="font-medium">Send Money</div></button><button id="action-transactions" class="bg-gray-50 p-4 rounded-lg text-center cursor-pointer hover:bg-gray-100 transition"><div class="h-12 w-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center mx-auto mb-3"><i class="fas fa-history"></i></div><div class="font-medium">History</div></button><button id="action-settings" class="bg-gray-50 p-4 rounded-lg text-center cursor-pointer hover:bg-gray-100 transition"><div class="h-12 w-12 rounded-full bg-yellow-100 text-yellow-500 flex items-center justify-center mx-auto mb-3"><i class="fas fa-cog"></i></div><div class="font-medium">Settings</div></button></div></div></div><div class="lg:col-span-1"><div class="card p-6 bg-blue-600 text-white"><h2 class="font-medium mb-2 opacity-80">Current Balance</h2><p id="dashboard-balance" class="text-4xl font-bold"></p></div></div></div></section>
+      <section id="checkout-view" class="fade-in hidden"><div class="max-w-xl mx-auto card p-8"><div id="amount-entry-step"><h1 class="text-2xl font-bold mb-6 text-center">Send Money</h1><form id="send-money-form"><div class="mb-4"><label for="recipient" class="form-label">Recipient's Email or Phone</label><input type="text" id="recipient" class="form-input" placeholder="e.g., friend@example.com" required></div><div class="mb-6"><label for="amount" class="form-label">Amount (USD)</label><div class="flex items-center"><span class="text-2xl font-bold mr-2">$</span><input type="number" id="amount" class="form-input text-2xl" placeholder="0.00" step="0.01" required></div></div><button type="submit" class="btn-primary w-full py-3 text-lg">Proceed to Authentication</button></form></div><div id="auth-step" class="hidden"><h2 id="auth-step-title" class="text-lg font-semibold text-center mb-2">Confirm Payment</h2><p class="text-gray-500 text-center mb-6">Choose your preferred method to securely authorize this transaction.</p><div class="flex flex-col md:flex-row gap-4"><button id="face-auth-btn" class="btn-primary w-full text-lg py-3 flex-1"><i class="fas fa-face-smile mr-3 text-2xl"></i><div><span class="block font-bold">Face ID</span></div></button><button id="fingerprint-auth-btn" class="btn-primary w-full text-lg py-3 flex-1 bg-green-500 hover:bg-green-600"><i class="fas fa-fingerprint mr-3 text-2xl"></i><div><span class="block font-bold">Fingerprint</span></div></button></div><button id="back-to-amount-btn" class="w-full text-center mt-6 text-gray-500 hover:text-blue-600">Go Back</button></div></div></section>
+      <section id="transactions-view" class="fade-in hidden"><h1 class="text-2xl font-bold text-gray-800 mb-6">Transaction History</h1><div class="card p-0"><div class="overflow-x-auto"><table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th></tr></thead><tbody id="transaction-table-body" class="bg-white divide-y divide-gray-200"></tbody></table></div></div></section>
+      <section id="settings-view" class="fade-in hidden"><h1 class="text-2xl font-bold text-gray-800 mb-6">Settings</h1><div class="card p-8"><h2 class="text-xl font-bold mb-4">Profile Information</h2><div class="grid md:grid-cols-2 gap-6"><div class="mb-4"> <label class="form-label" for="settings-firstname">First Name</label> <input type="text" id="settings-firstname" class="form-input"> </div><div class="mb-4"> <label class="form-label" for="settings-lastname">Last Name</label> <input type="text" id="settings-lastname" class="form-input"> </div><div class="mb-4"> <label class="form-label" for="settings-email">Email Address</label> <input type="email" id="settings-email" class="form-input bg-gray-100" readonly> </div><div class="mb-4"> <label class="form-label" for="settings-cell">Cell Phone</label> <input type="tel" id="settings-cell" class="form-input" placeholder="e.g., 555-123-4567"> </div></div><hr class="my-8"><h2 class="text-xl font-bold mb-4">Security</h2><div class="space-y-6"><div><label class="form-label" for="settings-secretcode">Secret Code</label><input type="password" id="settings-secretcode" class="form-input max-w-sm"><p class="text-sm text-gray-500 mt-1">A memorable word for account recovery.</p></div><div class="flex items-center justify-between"><p class="font-medium">Enable SMS/Email Hacking Alerts</p><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></div><div><button id="manage-biometrics-btn" class="btn-primary bg-gray-700 hover:bg-gray-800"><i class="fas fa-fingerprint mr-2"></i>Manage Biometrics</button></div></div></div></section>
+    </main>
+  </div>
+  
+  <div class="modal" id="payment-success-modal"><div class="modal-content"><div class="text-center mb-6"><div class="success-checkmark"><div class="check-icon"><span class="icon-line line-tip"></span><span class="icon-line line-long"></span></div></div><h2 class="text-2xl font-bold text-green-600 mt-4 mb-2">Payment Successful!</h2><p id="success-modal-message" class="text-gray-600"></p></div><div class="flex space-x-4"><button class="btn-primary bg-gray-600 hover:bg-gray-700 w-1/2" id="close-payment-modal">Done</button><button class="btn-primary w-1/2" id="view-receipt-btn">View Receipt</button></div></div></div>
+  <div class="modal" id="fingerprint-modal"><div class="modal-content text-center"><i id="fingerprint-scan-icon" class="fas fa-fingerprint text-gray-300 text-8xl mb-6 fingerprint-icon-animated"></i><h2 id="fingerprint-scan-title" class="text-2xl font-bold text-gray-800 mb-2">Ready to Scan</h2><p id="fingerprint-scan-text" class="text-gray-500">Place your finger on the sensor.</p></div></div>
+  <div class="modal" id="face-id-modal"><div class="modal-content text-center"><div class="relative w-48 h-48 mx-auto rounded-full bg-gray-800 flex items-center justify-center overflow-hidden mb-6"><i class="fas fa-user-circle text-9xl text-gray-500"></i><div class="face-scan-line"></div></div><h2 id="face-scan-title" class="text-2xl font-bold text-gray-800 mb-2">Scanning Face...</h2><p id="face-scan-text" class="text-gray-500">Hold still.</p></div></div>
+
+  <script id="app-script">
+    document.addEventListener('DOMContentLoaded', () => {
+      let appState = { isLoggedIn: false, userProfile: null, currentTransactionAmount: 0, transactions: [], balance: 0 };
+      const views = { landing: document.getElementById('landing-view'), login: document.getElementById('login-view'), register: document.getElementById('register-view'), dashboard: document.getElementById('dashboard-view'), checkout: document.getElementById('checkout-view'), transactions: document.getElementById('transactions-view'), settings: document.getElementById('settings-view'), onboardingStart: document.getElementById('onboarding-start-view'), idVerification: document.getElementById('id-verification-view'), faceRegistration: document.getElementById('face-registration-view'), onboardingComplete: document.getElementById('onboarding-complete-view') };
+      const authShell = document.getElementById('auth-shell'), mainAppShell = document.getElementById('main-app-shell');
+      const headerUserName = document.getElementById('header-user-name'), dashboardWelcomeMsg = document.getElementById('dashboard-welcome-message');
+      const paymentSuccessModal = document.getElementById('payment-success-modal'), fingerprintModal = document.getElementById('fingerprint-modal'), faceIdModal = document.getElementById('face-id-modal');
+
+      const showView = (viewId) => { Object.values(views).forEach(v => v.classList.add('hidden')); if (views[viewId]) views[viewId].classList.remove('hidden'); window.scrollTo(0, 0); };
+      const setAppShellVisibility = (showMainApp) => { authShell.style.display = showMainApp ? 'none' : 'block'; mainAppShell.style.display = showMainApp ? 'block' : 'none'; };
+      const updateDashboard = () => { document.getElementById('dashboard-balance').textContent = `$${appState.balance.toFixed(2)}`; };
+      
+      const updateUserUI = () => {
+        if (appState.isLoggedIn && appState.userProfile) {
+          const { firstName, lastName, email, cell, secretCode } = appState.userProfile;
+          headerUserName.textContent = `${firstName} ${lastName}`;
+          dashboardWelcomeMsg.textContent = `Welcome back, ${firstName}!`;
+          document.getElementById('settings-firstname').value = firstName;
+          document.getElementById('settings-lastname').value = lastName;
+          document.getElementById('settings-email').value = email;
+          document.getElementById('settings-cell').value = cell;
+          document.getElementById('settings-secretcode').value = secretCode;
+          updateDashboard();
+        }
+      };
+
+      const renderTransactions = () => {
+        const transactionTableBody = document.getElementById('transaction-table-body');
+        transactionTableBody.innerHTML = '';
+        appState.transactions.forEach(tx => addTransactionRow(tx, false));
+      };
+
+      const addTransactionRow = (tx, isNew) => {
+        const transactionTableBody = document.getElementById('transaction-table-body');
+        const amountClass = tx.amount > 0 ? 'text-green-500' : 'text-red-500';
+        const amountSign = tx.amount > 0 ? '+' : '';
+        const rowHTML = `<tr class="${isNew ? 'bg-blue-50' : ''}"><td class="px-6 py-4 text-sm">${tx.date}</td><td class="px-6 py-4 font-medium">${tx.desc}</td><td class="px-6 py-4 font-medium ${amountClass}">${amountSign}$${Math.abs(tx.amount).toFixed(2)}</td><td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">${tx.status}</span></td></tr>`;
+        transactionTableBody.insertAdjacentHTML('afterbegin', rowHTML);
+      };
+      
+      const handlePaymentSuccess = () => {
+        appState.balance -= appState.currentTransactionAmount;
+        updateDashboard();
+        const newTx = { date: new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).format(new Date()), desc: `Payment to ${document.getElementById('recipient').value || 'Recipient'}`, amount: -appState.currentTransactionAmount, status: 'Completed' };
+        appState.transactions.unshift(newTx); addTransactionRow(newTx, true);
+        document.getElementById('success-modal-message').textContent = `Your payment of $${appState.currentTransactionAmount.toFixed(2)} has been sent.`;
+        paymentSuccessModal.classList.add('active');
+      };
+      
+      const simulateBiometricScan = (type, onSuccess) => {
+          const modal = type === 'face' ? faceIdModal : fingerprintModal;
+          const icon = document.getElementById(`${type === 'face' ? 'face-scan' : 'fingerprint-scan'}-icon`);
+          const title = document.getElementById(`${type === 'face' ? 'face-scan' : 'fingerprint-scan'}-title`);
+          const text = document.getElementById(`${type === 'face' ? 'face-scan' : 'fingerprint-scan'}-text`);
+          modal.classList.add('active');
+          setTimeout(() => { if(type === 'fingerprint') { title.textContent = "Scanning..."; text.textContent = "Authenticating..."; } }, 500);
+          setTimeout(() => {
+              title.textContent = "Success"; text.textContent = "Authorized.";
+              if(type === 'fingerprint') { icon.classList.remove('fa-fingerprint'); icon.classList.add('fa-check-circle', 'text-green-500'); }
+          }, 2500);
+          setTimeout(() => {
+              modal.classList.remove('active');
+              onSuccess();
+              setTimeout(() => {
+                  title.textContent = type === 'face' ? 'Scanning Face...' : 'Ready to Scan';
+                  text.textContent = type === 'face' ? 'Hold still.' : 'Place your finger on the sensor.';
+                  if(type === 'fingerprint') { icon.classList.remove('fa-check-circle', 'text-green-500'); icon.classList.add('fa-fingerprint'); }
+              }, 500);
+          }, 3500);
+      };
+      
+      const handleLoginSuccess = () => {
+          appState.isLoggedIn = true;
+          appState.userProfile = { firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', cell: '555-123-4567', secretCode: 'SuperSecret123' };
+          appState.transactions = [{ date: 'Jan 25, 2025', desc: 'Online Store Purchase', amount: -125.00, status: 'Completed' }];
+          appState.balance = 2450.75;
+          updateUserUI(); renderTransactions(); setAppShellVisibility(true); showView('dashboard');
+      };
+
+      // --- EVENT LISTENERS ---
+      document.getElementById('show-login-btn').addEventListener('click', () => showView('login'));
+      document.getElementById('show-register-btn').addEventListener('click', () => showView('register'));
+      document.getElementById('login-form').addEventListener('submit', (e) => { e.preventDefault(); handleLoginSuccess(); });
+      document.getElementById('biometric-login-btn').addEventListener('click', () => { simulateBiometricScan('fingerprint', handleLoginSuccess); });
+      document.getElementById('register-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        appState.isLoggedIn = true;
+        appState.userProfile = { firstName: document.getElementById('reg-firstname').value, lastName: document.getElementById('reg-lastname').value, email: document.getElementById('reg-email').value, cell: '', secretCode: '' };
+        appState.transactions = []; appState.balance = 0;
+        document.getElementById('onboarding-welcome-name').textContent = appState.userProfile.firstName;
+        showView('onboardingStart');
+      });
+      document.getElementById('logout-btn').addEventListener('click', () => { appState.isLoggedIn = false; appState.userProfile = null; setAppShellVisibility(false); showView('landing'); });
+
+      // Onboarding Flow
+      document.getElementById('begin-verification-btn').addEventListener('click', () => showView('idVerification'));
+      document.getElementById('id-front-upload').addEventListener('change', (e) => { document.getElementById('id-front-feedback').innerHTML = `<i class="fas fa-check-circle text-3xl text-green-500 mb-3"></i><p class="font-semibold text-green-600">${e.target.files[0].name}</p>`; });
+      document.getElementById('id-back-upload').addEventListener('change', (e) => { document.getElementById('id-back-feedback').innerHTML = `<i class="fas fa-check-circle text-3xl text-green-500 mb-3"></i><p class="font-semibold text-green-600">${e.target.files[0].name}</p>`; });
+      document.getElementById('submit-id-btn').addEventListener('click', () => {
+        document.getElementById('id-upload-step').classList.add('hidden'); document.getElementById('id-processing-step').classList.remove('hidden');
+        setTimeout(() => { document.getElementById('id-processing-step').classList.add('hidden'); document.getElementById('id-success-step').classList.remove('hidden'); }, 2000);
+      });
+      document.getElementById('id-success-continue-btn').addEventListener('click', () => showView('faceRegistration'));
+      document.getElementById('start-face-scan-btn').addEventListener('click', () => {
+        document.getElementById('face-setup-step').classList.add('hidden'); document.getElementById('face-scanning-step').classList.remove('hidden');
+        setTimeout(() => { document.getElementById('face-scanning-step').classList.add('hidden'); document.getElementById('face-success-step').classList.remove('hidden'); }, 2000);
+      });
+      document.getElementById('face-success-continue-btn').addEventListener('click', () => showView('onboardingComplete'));
+      document.getElementById('go-to-dashboard-btn').addEventListener('click', () => { updateUserUI(); renderTransactions(); setAppShellVisibility(true); showView('dashboard'); });
+
+      // Main App
+      ['logo-link', 'action-send-money', 'action-transactions', 'action-settings'].forEach(id => {
+          document.getElementById(id).addEventListener('click', (e) => {
+              e.preventDefault();
+              const viewMap = { 'logo-link': 'dashboard', 'action-send-money': 'checkout', 'action-transactions': 'transactions', 'action-settings': 'settings' };
+              if (appState.isLoggedIn) showView(viewMap[id]);
+          });
+      });
+      document.getElementById('send-money-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        appState.currentTransactionAmount = parseFloat(document.getElementById('amount').value);
+        document.getElementById('auth-step-title').textContent = `Confirm Payment of $${appState.currentTransactionAmount.toFixed(2)}`;
+        document.getElementById('amount-entry-step').classList.add('hidden'); document.getElementById('auth-step').classList.remove('hidden');
+      });
+      document.getElementById('back-to-amount-btn').addEventListener('click', () => { document.getElementById('auth-step').classList.add('hidden'); document.getElementById('amount-entry-step').classList.remove('hidden'); });
+      document.getElementById('face-auth-btn').addEventListener('click', () => simulateBiometricScan('face', handlePaymentSuccess));
+      document.getElementById('fingerprint-auth-btn').addEventListener('click', () => simulateBiometricScan('fingerprint', handlePaymentSuccess));
+      document.getElementById('close-payment-modal').addEventListener('click', () => {
+        paymentSuccessModal.classList.remove('active'); showView('dashboard');
+        document.getElementById('send-money-form').reset(); document.getElementById('auth-step').classList.add('hidden'); document.getElementById('amount-entry-step').classList.remove('hidden');
+      });
+      document.getElementById('view-receipt-btn').addEventListener('click', () => { paymentSuccessModal.classList.remove('active'); showView('transactions'); });
+      document.getElementById('manage-biometrics-btn').addEventListener('click', () => { alert("This would start the flow to re-register your Face ID or Fingerprint."); });
+      ['firstname', 'lastname', 'cell', 'secretcode'].forEach(field => {
+          document.getElementById(`settings-${field}`).addEventListener('input', e => {
+              const keyMap = { firstname: 'firstName', lastname: 'lastName', cell: 'cell', secretcode: 'secretCode'};
+              if (appState.userProfile) appState.userProfile[keyMap[field]] = e.target.value;
+              updateUserUI();
+          });
+      });
+      
+      // --- PWA Service Worker Registration ---
+      if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+              navigator.serviceWorker.register('./sw.js')
+                  .then(registration => console.log('ServiceWorker registration successful with scope: ', registration.scope))
+                  .catch(err => console.log('ServiceWorker registration failed: ', err));
+          });
+      }
+
+      // --- INITIALIZATION ---
+      setAppShellVisibility(false); showView('landing');
+    });
+  </script>
+</body>
+</html>
