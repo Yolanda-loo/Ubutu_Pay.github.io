@@ -85,7 +85,8 @@
 
   <script id="app-script">
     document.addEventListener('DOMContentLoaded', () => {
-      let appState = { isLoggedIn: false, userProfile: null, currentTransactionAmount: 0, transactions: [], balance: 0 };
+      // --- CHANGE 1: Added isNewUser property to track first-time login after registration.
+      let appState = { isLoggedIn: false, isNewUser: false, userProfile: null, currentTransactionAmount: 0, transactions: [], balance: 0 };
       let deferredInstallPrompt = null;
       const installPwaBtn = document.getElementById('install-pwa-btn');
 
@@ -102,7 +103,15 @@
         if (appState.isLoggedIn && appState.userProfile) {
           const { firstName, lastName, email, cell, secretCode } = appState.userProfile;
           headerUserName.textContent = `${firstName} ${lastName}`;
-          dashboardWelcomeMsg.textContent = `Welcome back, ${firstName}!`;
+          
+          // --- CHANGE 2: Updated logic to show a different welcome message for new vs. returning users.
+          if (appState.isNewUser) {
+            dashboardWelcomeMsg.textContent = `Welcome to your UbuntuPay, ${firstName} ${lastName}!`;
+            appState.isNewUser = false; // Reset the flag so it only shows once
+          } else {
+            dashboardWelcomeMsg.textContent = `Welcome back, ${firstName}!`;
+          }
+
           document.getElementById('settings-firstname').value = firstName;
           document.getElementById('settings-lastname').value = lastName;
           document.getElementById('settings-email').value = email;
@@ -168,6 +177,7 @@
       
       const handleLoginSuccess = () => {
           appState.isLoggedIn = true;
+          appState.isNewUser = false; // --- ADDED: Ensure returning users are not marked as new.
           appState.userProfile = { firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', cell: '082 123 4567', secretCode: 'SuperSecret123' };
           appState.transactions = [{ date: 'Jan 25, 2025', desc: 'Online Store Purchase', amount: -1250.00, status: 'Completed' }];
           appState.balance = 12450.75;
@@ -182,6 +192,7 @@
       document.getElementById('register-form').addEventListener('submit', (e) => {
         e.preventDefault();
         appState.isLoggedIn = true;
+        appState.isNewUser = true; // --- ADDED: Mark this user as new upon registration.
         appState.userProfile = { firstName: document.getElementById('reg-firstname').value, lastName: document.getElementById('reg-lastname').value, email: document.getElementById('reg-email').value, cell: '', secretCode: '' };
         appState.transactions = []; appState.balance = 0;
         document.getElementById('onboarding-welcome-name').textContent = appState.userProfile.firstName;
@@ -253,6 +264,7 @@
           });
       });
       
+      // --- PWA Installation Logic ---
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault(); deferredInstallPrompt = e; installPwaBtn.classList.remove('hidden');
       });
@@ -266,6 +278,7 @@
         }
       });
       
+      // --- Service Worker Registration ---
       if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').then(reg => console.log('ServiceWorker registration successful.', reg)).catch(err => console.log('ServiceWorker registration failed: ', err)); });
       }
