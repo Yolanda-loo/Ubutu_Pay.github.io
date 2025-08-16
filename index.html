@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>UbuntuPay - Biometric Payment Platform</title>
   
-  <!-- PWA Manifest & Theme Color -->
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#3B82F6">
   
@@ -58,7 +57,7 @@
   
   <div id="auth-shell">
     <div class="app-container px-4 py-8">
-      <section id="landing-view" class="fade-in"><div class="text-center max-w-2xl mx-auto mt-16"><i class="fas fa-shield-alt text-7xl text-blue-500 mb-6"></i><h1 class="text-5xl font-bold text-gray-800 mb-4">UbuntuPay</h1><p class="text-lg text-gray-600 mb-10">Welcome to UbuntuPay. Log in or create an account to experience the future of biometric payments.</p><div class="flex justify-center gap-4"><button id="show-login-btn" class="btn-primary px-8 py-3 text-lg">Login</button><button id="show-register-btn" class="btn-primary bg-green-500 hover:bg-green-600 px-8 py-3 text-lg">Register</button></div></div></section>
+      <section id="landing-view" class="fade-in"><div class="text-center max-w-2xl mx-auto mt-16"><i class="fas fa-shield-alt text-7xl text-blue-500 mb-6"></i><h1 class="text-5xl font-bold text-gray-800 mb-4">Secure, Seamless Payments</h1><p class="text-lg text-gray-600 mb-10">Welcome to UbuntuPay. Log in or create an account to experience the future of biometric payments.</p><div class="flex justify-center gap-4"><button id="show-login-btn" class="btn-primary px-8 py-3 text-lg">Login</button><button id="show-register-btn" class="btn-primary bg-green-500 hover:bg-green-600 px-8 py-3 text-lg">Register</button></div></div></section>
       <section id="login-view" class="fade-in hidden"><div class="max-w-md mx-auto card p-8"><h2 class="text-2xl font-bold text-center mb-6">Welcome Back!</h2><div class="text-center mb-6"><button id="biometric-login-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-4 px-6 rounded-lg w-full flex items-center justify-center text-lg"><i class="fas fa-fingerprint mr-3"></i> Login with Biometrics</button></div><div class="flex items-center my-4"><hr class="w-full"><span class="px-2 text-gray-500">OR</span><hr class="w-full"></div><form id="login-form"><div class="mb-4"><label for="login-email" class="form-label">Email</label><input type="email" id="login-email" class="form-input" value="john.doe@example.com" required></div><div class="mb-6"><label for="login-password" class="form-label">Password</label><input type="password" id="login-password" class="form-input" value="password" required></div><button type="submit" class="btn-primary w-full py-3">Login with Password</button></form></div></section>
       <section id="register-view" class="fade-in hidden"><div class="max-w-md mx-auto card p-8"><h2 class="text-2xl font-bold text-center mb-6">Create Your Account</h2><form id="register-form"><div class="grid grid-cols-2 gap-4 mb-4"><div><label for="reg-firstname" class="form-label">First Name</label><input type="text" id="reg-firstname" class="form-input" required></div><div><label for="reg-lastname" class="form-label">Last Name</label><input type="text" id="reg-lastname" class="form-input" required></div></div><div class="mb-4"><label for="reg-email" class="form-label">Email</label><input type="email" id="reg-email" class="form-input" required></div><div class="mb-6"><label for="reg-password" class="form-label">Password</label><input type="password" id="reg-password" class="form-input" required></div><button type="submit" class="btn-primary w-full py-3">Create Account</button></form></div></section>
       <section id="onboarding-start-view" class="fade-in hidden"><div class="text-center max-w-2xl mx-auto card p-10"><h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome, <span id="onboarding-welcome-name"></span>!</h1><p class="text-gray-600 mb-8">To secure your account, we need to verify your identity. This is a one-time process.</p><button id="begin-verification-btn" class="btn-primary px-8 py-3 text-lg">Begin Verification</button></div></section>
@@ -69,7 +68,7 @@
   </div>
 
   <div id="main-app-shell" class="hidden">
-    <header class="bg-white shadow-sm sticky top-0 z-50"><div class="app-container px-4 py-4 flex items-center justify-between"><a href="#" class="text-2xl font-bold text-blue-600 flex items-center" id="logo-link"><i class="fas fa-shield-alt mr-2"></i><span>UbuntuPay</span></a><div id="user-header-info" class="flex items-center ml-6"><span class="font-medium mr-3" id="header-user-name"></span><div class="h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center mr-4"><i class="fas fa-user"></i></div><button id="logout-btn" class="text-sm text-gray-500 hover:text-red-500 transition">Logout</button></div></div></header>
+    <header class="bg-white shadow-sm sticky top-0 z-50"><div class="app-container px-4 py-4 flex items-center justify-between"><a href="#" class="text-2xl font-bold text-blue-600 flex items-center" id="logo-link"><i class="fas fa-shield-alt mr-2"></i><span>UbuntuPay</span></a><div id="user-header-info" class="flex items-center ml-6"><button id="install-pwa-btn" class="hidden sm:flex items-center mr-6 bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded-lg text-sm"><i class="fas fa-arrow-down mr-2"></i>Install App</button><span class="font-medium mr-3" id="header-user-name"></span><div class="h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center mr-4"><i class="fas fa-user"></i></div><button id="logout-btn" class="text-sm text-gray-500 hover:text-red-500 transition">Logout</button></div></div></header>
     <main class="app-container px-4 py-8">
       <section id="dashboard-view" class="fade-in"><div class="mb-8"><h1 class="text-3xl font-bold text-gray-800" id="dashboard-welcome-message"></h1><p class="text-gray-500">Manage your finances with the security of biometrics.</p></div><div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><div class="lg:col-span-2"><div class="card p-6"><h2 class="text-xl font-bold mb-4">Quick Actions</h2><div class="grid grid-cols-2 md:grid-cols-3 gap-4"><button id="action-send-money" class="bg-gray-50 p-4 rounded-lg text-center cursor-pointer hover:bg-gray-100 transition"><div class="h-12 w-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-3"><i class="fas fa-paper-plane"></i></div><div class="font-medium">Send Money</div></button><button id="action-deposit" class="bg-gray-50 p-4 rounded-lg text-center cursor-pointer hover:bg-gray-100 transition"><div class="h-12 w-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center mx-auto mb-3"><i class="fas fa-arrow-down"></i></div><div class="font-medium">Deposit</div></button><button id="action-withdraw" class="bg-gray-50 p-4 rounded-lg text-center cursor-pointer hover:bg-gray-100 transition"><div class="h-12 w-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-3"><i class="fas fa-arrow-up"></i></div><div class="font-medium">Withdraw</div></button><button id="action-transactions" class="bg-gray-50 p-4 rounded-lg text-center cursor-pointer hover:bg-gray-100 transition"><div class="h-12 w-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mx-auto mb-3"><i class="fas fa-history"></i></div><div class="font-medium">History</div></button><button id="action-settings" class="bg-gray-50 p-4 rounded-lg text-center cursor-pointer hover:bg-gray-100 transition"><div class="h-12 w-12 rounded-full bg-yellow-100 text-yellow-500 flex items-center justify-center mx-auto mb-3"><i class="fas fa-cog"></i></div><div class="font-medium">Settings</div></button></div></div></div><div class="lg:col-span-1"><div class="card p-6 bg-blue-600 text-white"><h2 class="font-medium mb-2 opacity-80">Current Balance</h2><p id="dashboard-balance" class="text-4xl font-bold"></p></div></div></div></section>
       <section id="checkout-view" class="fade-in hidden"><div class="max-w-xl mx-auto card p-8"><div id="amount-entry-step"><h1 class="text-2xl font-bold mb-6 text-center">Send Money</h1><form id="send-money-form"><div class="mb-4"><label for="recipient" class="form-label">Recipient's Email or Phone</label><input type="text" id="recipient" class="form-input" placeholder="e.g., friend@example.com" required></div><div class="mb-6"><label for="amount" class="form-label">Amount (R)</label><div class="flex items-center"><span class="text-2xl font-bold mr-2">R</span><input type="number" id="amount" class="form-input text-2xl" placeholder="0.00" step="0.01" required></div></div><button type="submit" class="btn-primary w-full py-3 text-lg">Proceed to Authentication</button></form></div><div id="auth-step" class="hidden"><h2 id="auth-step-title" class="text-lg font-semibold text-center mb-2">Confirm Payment</h2><p class="text-gray-500 text-center mb-6">Choose your preferred method to securely authorize this transaction.</p><div class="flex flex-col md:flex-row gap-4"><button id="face-auth-btn" class="btn-primary w-full text-lg py-3 flex-1"><i class="fas fa-face-smile mr-3 text-2xl"></i><div><span class="block font-bold">Face ID</span></div></button><button id="fingerprint-auth-btn" class="btn-primary w-full text-lg py-3 flex-1 bg-green-500 hover:bg-green-600"><i class="fas fa-fingerprint mr-3 text-2xl"></i><div><span class="block font-bold">Fingerprint</span></div></button></div><button id="back-to-amount-btn" class="w-full text-center mt-6 text-gray-500 hover:text-blue-600">Go Back</button></div></div></section>
@@ -87,6 +86,9 @@
   <script id="app-script">
     document.addEventListener('DOMContentLoaded', () => {
       let appState = { isLoggedIn: false, userProfile: null, currentTransactionAmount: 0, transactions: [], balance: 0 };
+      let deferredInstallPrompt = null;
+      const installPwaBtn = document.getElementById('install-pwa-btn');
+
       const views = { landing: document.getElementById('landing-view'), login: document.getElementById('login-view'), register: document.getElementById('register-view'), dashboard: document.getElementById('dashboard-view'), checkout: document.getElementById('checkout-view'), transactions: document.getElementById('transactions-view'), settings: document.getElementById('settings-view'), onboardingStart: document.getElementById('onboarding-start-view'), idVerification: document.getElementById('id-verification-view'), faceRegistration: document.getElementById('face-registration-view'), onboardingComplete: document.getElementById('onboarding-complete-view'), deposit: document.getElementById('deposit-view'), withdraw: document.getElementById('withdraw-view') };
       const authShell = document.getElementById('auth-shell'), mainAppShell = document.getElementById('main-app-shell');
       const headerUserName = document.getElementById('header-user-name'), dashboardWelcomeMsg = document.getElementById('dashboard-welcome-message');
@@ -206,7 +208,7 @@
       // Main App
       const navActions = { 'logo-link': 'dashboard', 'action-send-money': 'checkout', 'action-transactions': 'transactions', 'action-settings': 'settings', 'action-deposit': 'deposit', 'action-withdraw': 'withdraw' };
       Object.keys(navActions).forEach(id => {
-          document.getElementById(id).addEventListener('click', (e) => { e.preventDefault(); if (appState.isLoggedIn) showView(navActions[id]); });
+          document.getElementById(id)?.addEventListener('click', (e) => { e.preventDefault(); if (appState.isLoggedIn) showView(navActions[id]); });
       });
       document.getElementById('send-money-form').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -218,24 +220,14 @@
       document.getElementById('face-auth-btn').addEventListener('click', () => simulateBiometricScan('face', handlePaymentSuccess));
       document.getElementById('fingerprint-auth-btn').addEventListener('click', () => simulateBiometricScan('fingerprint', handlePaymentSuccess));
       
-      // Deposit Flow
       document.getElementById('deposit-form').addEventListener('submit', (e) => {
-          e.preventDefault();
-          const amount = parseFloat(document.getElementById('deposit-amount').value);
+          e.preventDefault(); const amount = parseFloat(document.getElementById('deposit-amount').value);
           if (isNaN(amount) || amount <= 0) return alert('Please enter a valid amount.');
-          appState.balance += amount;
-          const newTx = { date: new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).format(new Date()), desc: `Deposit`, amount: amount, status: 'Completed' };
-          appState.transactions.unshift(newTx); addTransactionRow(newTx, true);
-          updateUserUI();
-          alert(`Successfully deposited R ${amount.toFixed(2)}.`);
-          showView('dashboard');
-          e.target.reset();
+          appState.balance += amount; const newTx = { date: new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).format(new Date()), desc: `Deposit`, amount: amount, status: 'Completed' };
+          appState.transactions.unshift(newTx); addTransactionRow(newTx, true); updateUserUI(); alert(`Successfully deposited R ${amount.toFixed(2)}.`); showView('dashboard'); e.target.reset();
       });
-
-      // Withdraw Flow
       document.getElementById('withdraw-form').addEventListener('submit', (e) => {
-          e.preventDefault();
-          const amount = parseFloat(document.getElementById('withdraw-amount').value);
+          e.preventDefault(); const amount = parseFloat(document.getElementById('withdraw-amount').value);
           if (isNaN(amount) || amount <= 0) return alert('Please enter a valid amount.');
           if (amount > appState.balance) return alert('Insufficient funds for this withdrawal.');
           appState.currentTransactionAmount = amount;
@@ -247,8 +239,7 @@
       document.getElementById('withdraw-fingerprint-auth-btn').addEventListener('click', () => simulateBiometricScan('fingerprint', handleWithdrawalSuccess));
       
       document.getElementById('close-payment-modal').addEventListener('click', () => {
-        paymentSuccessModal.classList.remove('active'); showView('dashboard');
-        document.getElementById('send-money-form').reset(); document.getElementById('withdraw-form').reset();
+        paymentSuccessModal.classList.remove('active'); showView('dashboard'); document.getElementById('send-money-form').reset(); document.getElementById('withdraw-form').reset();
         document.getElementById('auth-step').classList.add('hidden'); document.getElementById('amount-entry-step').classList.remove('hidden');
         document.getElementById('withdraw-auth-step').classList.add('hidden'); document.getElementById('withdraw-amount-step').classList.remove('hidden');
       });
@@ -262,12 +253,21 @@
           });
       });
       
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault(); deferredInstallPrompt = e; installPwaBtn.classList.remove('hidden');
+      });
+      installPwaBtn.addEventListener('click', async () => {
+        if (deferredInstallPrompt) {
+            deferredInstallPrompt.prompt();
+            const { outcome } = await deferredInstallPrompt.userChoice;
+            console.log(`User response to the install prompt: ${outcome}`);
+            deferredInstallPrompt = null;
+            installPwaBtn.classList.add('hidden');
+        }
+      });
+      
       if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-              navigator.serviceWorker.register('./sw.js')
-                  .then(reg => console.log('ServiceWorker registration successful.', reg))
-                  .catch(err => console.log('ServiceWorker registration failed: ', err));
-          });
+          window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').then(reg => console.log('ServiceWorker registration successful.', reg)).catch(err => console.log('ServiceWorker registration failed: ', err)); });
       }
 
       setAppShellVisibility(false); showView('landing');
