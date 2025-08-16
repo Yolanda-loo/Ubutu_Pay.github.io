@@ -1,21 +1,23 @@
 {
-  "name": "UbuntuPay - Biometric Payments",
+  "name": "UbuntuPay - Biometric Payment Platform",
   "short_name": "UbuntuPay",
+  "description": "Secure, seamless biometric payments.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#f9fafb",
   "theme_color": "#3B82F6",
-  "description": "A secure, offline-capable biometric payment platform using South African Rands.",
   "icons": [
     {
-      "src": "https://www.gstatic.com/images/branding/product/1x/gpay_192dp.png",
+      "src": "https://via.placeholder.com/192x192.png?text=UP",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "https://www.gstatic.com/images/branding/product/2x/gpay_512dp.png",
+      "src": "https://via.placeholder.com/512x512.png?text=UP",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
