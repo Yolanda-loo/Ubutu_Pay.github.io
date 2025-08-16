@@ -1,26 +1,27 @@
-const CACHE_NAME = 'ubuntupay-v2'; // Updated version
+const CACHE_NAME = 'ubuntupay-v1';
 const urlsToCache = [
-  './index.html',
-  './manifest.json',
-  'https://cdn.tailwindcss.com',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2'
+  './',
+  './index.html', // Caching the main HTML file
+  './manifest.json' // Caching the manifest
+  // Note: External resources like CDN links are often best left to the browser's regular cache.
+  // Caching them here can be complex due to opaque responses.
 ];
 
-// Install the service worker and cache all the app's assets
+// Install event: cache the core app shell files
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache and caching assets');
+        console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
+      .catch(err => {
+        console.error('Failed to cache files during install:', err);
+      })
   );
-  self.skipWaiting();
 });
 
-// Intercept fetch requests and serve from cache if available
+// Fetch event: serve from cache first, then fall back to network
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
@@ -29,14 +30,14 @@ self.addEventListener('fetch', event => {
         if (response) {
           return response;
         }
-        // Not in cache - go to the network
+        // Not in cache - go to network
         return fetch(event.request);
       }
     )
   );
 });
 
-// Clean up old caches when a new service worker is activated
+// Activate event: clean up old caches to save space
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
@@ -44,12 +45,10 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
-            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
     })
   );
-  return self.clients.claim();
 });
