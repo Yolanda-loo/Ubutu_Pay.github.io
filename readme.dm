@@ -1,105 +1,149 @@
-# UbuntuPay - Offline-First Biometric Payment PWA
+UbuntuPay - Offline-First Biometric Payment PWA
+UbuntuPay is a fully interactive, offline-first Progressive Web App (PWA) that demonstrates a secure, modern biometric payment flow. 
+This project simulates the entire user journey, from registration and identity verification to making payments in South African Rands (ZAR) authenticated by Face ID or
+Fingerprint scanning.
+Built as a single-page application using vanilla JavaScript, HTML, and Tailwind CSS, UbuntuPay focuses on delivering a realistic financial user experience with a 
+resilient offline-first architecture.
 
-UbuntuPay is a fully interactive, offline-first Progressive Web App (PWA) that demonstrates a secure, modern biometric payment flow.
-This project simulates the entire user journey, from registration and identity verification to making payments in South African Rands (R) authenticated by
-Face ID or Fingerprint scanning.
 
-This application is built as a single-page experience using vanilla JavaScript, HTML, and Tailwind CSS, focusing on a realistic user
-flow and a resilient offline-first architecture.
+✨ Key Features
+UbuntuPay provides a feature-rich simulation of a fintech application, emphasizing usability, security, and offline capabilities.
+Authentication & Security
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+Dual Login Methods: Log in using email/password or one-touch Biometric Login (simulated).
+New User Registration: Streamlined registration form for new users.
+Mandatory Onboarding Flow: New users complete a guided verification process:
 
----
+ID Verification: Upload front and back of a government-issued ID (simulated).
+Face Registration: Set up Face ID for in-app payments (simulated).
 
-## ✨ Key Features
 
-This application is a feature-rich simulation designed to showcase a complete financial tech user experience.
+Profile Management: Update name, contact details, and a secret recovery code.
+Security Alerts: Enable simulated SMS/email notifications for suspicious activity.
 
-#### **Authentication & Security**
-- **Dual Login Methods:** Users can log in using a traditional email/password form or with a one-touch **Biometric Login** (simulated).
-- **New User Registration:** A clean registration form for new users.
-- **Mandatory Onboarding Flow:** New users are guided through a mandatory verification process before accessing the app:
-  1.  **ID Verification:** Upload front and back of a government-issued ID.
-  2.  **Face Registration:** Set up Face ID for in-app payments.
-- **Enhanced Profile Settings:** Users can manage their name, contact info, and a secret recovery code.
-- **Security Alerts:** A setting to enable simulated SMS/Email alerts for suspicious activity.
+Core Financial Features
 
-#### **Core Financial Features**
-- **Live Dashboard:** A central hub that greets the user by name and displays their **real-time account balance** in Rands (R).
-- **Send Money:** A dynamic flow to send a custom amount to a specified recipient.
-- **Deposit & Withdraw:** Simple forms to add or remove funds from the account balance.
-- **Live Transaction History:** The transaction list updates instantly after any successful payment, deposit, or withdrawal.
+Live Dashboard: Displays a personalized greeting and real-time account balance in ZAR.
+Send Money: Send custom amounts to specified recipients with a dynamic flow.
+Deposit & Withdraw: Simple forms to add or remove funds from the account.
+Transaction History: Instantly updates with details of payments, deposits, or withdrawals.
 
-#### **Biometric Integration**
-- **In-App Payment Authentication:** All sensitive transactions (sending money, withdrawing) require biometric approval, with realistic simulation modals for both **Face ID** and **Fingerprint** scanning.
-- **Biometric Login:** Fast and secure access for returning users without needing a password.
+Biometric Integration
 
-#### **Offline-First PWA**
-- **Offline Functionality:** Thanks to a service worker, the application is cached on the first visit and works perfectly without an internet connection on subsequent visits.
-- **Installable:** The app includes a web manifest, allowing users to "Add to Home Screen" on mobile devices or install it as a desktop app for a native-like experience.
+In-App Payment Authentication: Sensitive transactions (e.g., sending money, withdrawals) require biometric approval via simulated Face ID or Fingerprint modals.
+Biometric Login: Fast, secure access for returning users without a password.
 
----
+Offline-First PWA
 
-## 🚀 Getting Started
+Offline Functionality: Service worker caching ensures full functionality without an internet connection after the first visit.
+Installable: Web manifest enables "Add to Home Screen" on mobile devices or desktop installation for a native-like experience.
 
-To run this project locally, you must serve the files from a local web server. This is because service workers (for offline functionality) require a secure `http://` 
-or `https://` context.
 
-### Prerequisites
-- A modern web browser (Chrome, Firefox, Edge).
-- A code editor like [Visual Studio Code](https://code.visualstudio.com/).
+🚀 Getting Started
+To run UbuntuPay locally, you need to serve the files via a local web server, as service workers require a secure http:// or https:// context.
+Prerequisites
 
-### Installation & Setup
+A modern web browser (e.g., Chrome, Firefox, Edge).
+A code editor like Visual Studio Code.
+(Optional) Node.js for alternative server setups.
 
-1.  **Clone or Download the Repository:**
-    ```bash
-    git clone https://github.com/yoland-loo/ubuntupay-app.git
-    cd ubuntupay-app
-    ```
+Installation & Setup
 
-2.  **Ensure Project Structure:**
-    Your folder should contain the following three files:
-    - `index.html`
-    - `manifest.json`
-    - `sw.js`
 
-3.  **Run with a Local Server (Recommended):**
-    The easiest way to run the project is with the **Live Server** extension in VS Code.
-    - Install the [Live Server extension](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) from the VS Code marketplace.
-    - Right-click on the `index.html` file in your VS Code explorer.
-    - Select **"Open with Live Server"**.
-    - Your browser will automatically open the application at a local address like `http://127.0.0.1:5500`.
+Clone or Download the Repository:
+bashgit clone https://github.com/yoland-loo/ubuntupay-app.git
+cd ubuntupay-app
 
----
 
-## 📖 How to Use the Application
+Verify Project Structure:
+Ensure the following files are present:
 
-#### **New User Onboarding**
-1.  Click the **Register** button.
-2.  Fill in your details and click **Create Account**.
-3.  You will be guided through the mandatory verification process:
-    - **Step 1:** Upload simulated front and back ID images.
-    - **Step 2:** Complete the simulated face scan.
-4.  After finishing the setup, you will be taken to the main dashboard.
+index.html: Main application file with HTML, CSS, and JS.
+manifest.json: PWA manifest for app metadata and icons.
+sw.js: Service worker for offline caching.
 
-#### **Returning User Login**
-- **Biometric Login:** Click **"Login with Biometrics"**. After the fingerprint simulation, you will be logged in.
-- **Password Login:** Enter the default credentials (`john.doe@example.com` / `password`) and log in.
 
-#### **Making a Transaction**
-1.  From the dashboard, choose **Send Money**, **Deposit**, or **Withdraw**.
-2.  Enter the required details (e.g., recipient and amount).
-3.  For sending or withdrawing money, choose either **Face ID** or **Fingerprint** to approve the transaction.
-4.  Observe the realistic simulation modal.
-5.  Upon success, your dashboard balance will update, and the new transaction will appear at the top of your **History**.
 
----
+Run with a Local Server:
+The easiest method is using the Live Server extension in VS Code:
 
-## 📁 Project Structure
+Install the Live Server extension.
+Right-click index.html in VS Code and select "Open with Live Server".
+The app will open in your browser at http://127.0.0.1:5500.
 
-```
-/
-├── index.html       # The main application file containing all HTML, CSS, and JS logic.
-├── manifest.json    # The PWA manifest for app properties and icons.
-└── sw.js            # The service worker script for offline caching.
+Alternatively, use a simple Node.js server:
+bashnpm install -g http-server
+http-server -p 8080
+Then navigate to http://localhost:8080 in your browser.
 
+
+
+📖 How to Use the Application
+New User Onboarding
+
+Click Register on the homepage.
+Fill in your details and click Create Account.
+Complete the mandatory verification process:
+
+Step 1: Upload simulated front and back ID images.
+Step 2: Perform a simulated face scan for Face ID setup.
+
+
+After verification, you’ll be directed to the main dashboard.
+
+Returning User Login
+
+Biometric Login: Select "Login with Biometrics" and complete the simulated fingerprint scan.
+Password Login: Use default credentials (john.doe@example.com / password) to log in.
+
+Making a Transaction
+
+From the dashboard, select Send Money, Deposit, or Withdraw.
+Enter required details (e.g., recipient and amount for sending money).
+For secure transactions (send/withdraw), authenticate using simulated Face ID or Fingerprint.
+Upon successful authentication, the dashboard balance updates, and the transaction appears in the History section.
+
+
+📁 Project Structure
+text/ubuntupay-app
+├── index.html       # Main application file (HTML, CSS, JS).
+├── manifest.json    # PWA manifest for app metadata and icons.
+└── sw.js            # Service worker for offline functionality.
+
+🛠️ Additional Notes
+
+Browser Compatibility: Tested on modern browsers (Chrome, Firefox, Edge, Safari). Ensure your browser supports service workers for offline functionality.
+Security: This is a simulation; no real biometric data or financial transactions are processed.
+Customization: Modify index.html to adjust the UI or logic, or update manifest.json for app metadata (e.g., icons, name).
+
+
+🤝 Contributing
+Contributions are welcome! To contribute:
+
+Fork the repository.
+Create a feature branch (git checkout -b feature/your-feature).
+Commit your changes (git commit -m 'Add your feature').
+Push to the branch (git push origin feature/your-feature).
+Open a pull request.
+
+Please ensure your code follows the existing style and includes appropriate comments.
+
+📄 License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+🙋 FAQ
+Q: Can I use real biometric data with UbuntuPay?
+A: No, UbuntuPay is a simulation. All biometric interactions (Face ID, Fingerprint) are mocked for demonstration purposes.
+Q: Does the app work offline?
+A: Yes, after the first visit, the service worker caches the app, enabling full functionality offline.
+Q: How do I install the app?
+A: On mobile, use your browser’s "Add to Home Screen" option. On desktop, use the browser’s install prompt (if supported).
+
+📸 Screenshots
+(Optional: Add screenshots of the app’s dashboard, biometric modals, or transaction flows to visually showcase the app. If you’d like, I can guide you on how to include them.)
+
+📬 Contact
+For questions or feedback, reach out to the project maintainer:
+
+GitHub: yoland-loo
+Email: londie970918@gmail.com
